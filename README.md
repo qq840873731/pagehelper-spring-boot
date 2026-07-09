@@ -4,19 +4,110 @@ PageHelper-Spring-Boot-Starter 帮助你集成分页插件到 Spring Boot。
 
 PageHelper-Spring-Boot-Starter will help you use PageHelper with Spring Boot.
 
-Support PageHelper 5.x
+Support PageHelper 6.x
 
 ## How to use
 在 pom.xml 中添加如下依赖：
 
-Add the following dependency to your pom.xml: 
+Add the following dependency to your pom.xml:
+
 ```xml
+
 <dependency>
-    <groupId>com.github.pagehelper</groupId>
-    <artifactId>pagehelper-spring-boot-starter</artifactId>
-    <version>1.4.1</version>
+  <groupId>com.github.pagehelper</groupId>
+  <artifactId>pagehelper-spring-boot-starter</artifactId>
+  <version>4.1.1</version>
 </dependency>
 ```
+
+## 微信公众号
+
+<img src="wx_mybatis.jpg" height="300"/>
+
+## v4.1.1 - 2026-07-09
+
+- 升级 spring-boot-dependencies 到 4.1.0
+- 修复配置文件中 kebab-case 风格的配置项失效的问题，新增 `PageHelperStandardProperties` 用于正确绑定 Spring Boot 属性
+
+## v4.1.0 - 2026-05-29
+
+- 将最低支持 JDK 版本降级到 JDK17
+
+## v4.0.0 - 2026-04-23
+
+- 升级 mybatis-spring-boot-starter 到 4.0.1
+- 升级 spring-boot-dependencies 到 4.0.2
+- 当前版本支持 JDK21+
+
+## v2.1.1 - 2025-06-20
+
+- 升级 PageHelper 到 6.1.1
+- 升级 MyBatis 到 3.5.19
+- 修复 autoconfigure 模块 MyBatis 依赖版本不一致问题（3.5.10 → 3.5.19）
+- 新增 Spring Boot 属性映射：`debug`、`countSuffix`、`countMsIdGen`、`msCountCache`、`aggregateFunctions`、`asyncCountParallelism`
+- Maven 发布从旧 OSSRH (oss.sonatype.org) 迁移到新的 Maven Central Portal (central.sonatype.com)
+
+**当前版本支持 JDK17+ 和以下依赖版本：**
+
+- mybatis-spring-boot-starter 3.0.4
+- spring-boot-dependencies 3.5.0
+
+## v2.1.0 - 2023-12-17
+
+- 升级 PageHelper 到 6.1.0，支持异步 count
+  等功能，详细查看 [6.1.0](https://github.com/pagehelper/Mybatis-PageHelper/releases/tag/v6.1.0)
+- 升级 MyBatis 到 3.5.15
+- 升级 springboot 到 2.7.18
+- 新增参数 `orderBySqlParser`，`OrderBySqlParser`改为接口，允许通过`orderBySqlParser`参数替换为自己的实现
+- 新增参数 `sqlServerSqlParser`，`SqlServerSqlParser`改为接口，允许通过`sqlServerSqlParser`参数替换为自己的实现
+- 接口 `CountSqlParser`,`OrderBySqlParser`,`SqlServerSqlParser` 还支持SPI方式覆盖默认实现，优先级低于参数指定
+
+## v2.0.0 - 2023-11-05
+
+- 升级 PageHelper 到 6.0.0，支持异步 count 等功能，详细查看 [6.0](https://github.com/pagehelper/Mybatis-PageHelper/releases/tag/v6.0.0)
+- 升级 MyBatis 到 3.5.15
+- 升级 springboot 到 2.7.17
+- 新增参数 `asyncCount`，增加异步count支持，默认`false`，单次设置：`PageHelper.startPage(1, 10).enableAsyncCount()`;
+- 新增参数 `countSqlParser`，`CountSqlParser`改为接口，允许通过`countSqlParser`参数替换为自己的实现
+
+参数示例：
+```properties
+pagehelper.async-count=true
+```
+
+## v1.4.7 - 2023-06-03
+
+- 升级 PageHelper 到 5.3.3
+- 升级 MyBatis 到 3.5.13
+- 升级 MyBatis Starter 到 2.3.1
+- 升级 springboot 到 2.7.12
+
+## v1.4.6 - 2022-11-28
+
+- 兼容 Spring Boot 3.0 by [pky920216344](https://github.com/pky920216344)
+- 功能完善：存在PageInterceptor及其子类就不再添加过滤器 by [jingheee](https://github.com/jingheee)
+
+## v1.4.5 - 2022-09-18
+
+- 升级 PageHelper 到 5.3.2
+
+## v1.4.4 - 2022-09-16
+
+- 修复配置文件中kebab-case风格的配置项失效的问题 pr#138, by ShoWen
+- 兼容性支持，demo配置修改
+- 升级 springboot 到 2.7.3
+
+## v1.4.3 - 2022-06-18
+
+- 升级 PageHelper 到 5.3.1
+- 升级 MyBatis 到 3.5.10
+- 升级 springboot 到 2.7.0
+
+## v1.4.2 - 2022-04-06
+
+- 升级 MyBatis 到 3.5.9
+- 升级 MyBatis Starter 到 2.2.2
+- 升级 springboot 到 2.6.6
 
 ## v1.4.1 - 2021-11-24
 
@@ -166,7 +257,8 @@ application.properties:
 ```properties
 pagehelper.propertyName=propertyValue
 ```
-注意 pagehelper 配置，因为分页插件根据自己的扩展不同，支持的参数也不同，所以不能用固定的对象接收参数，所以这里使用的 `Map<String,String>`，因此参数名是什么这里就写什么，IDE 也不会有自动提示。
+注意 pagehelper 配置，大部分常用参数支持 IDE 自动提示和 kebab-case 风格配置（如 `offset-as-page-num`），
+如果自己扩展了分页插件参数，对于无法自动提示的参数，直接使用原始参数名配置即可。
 
 关于可配置的属性请参考 [如何使用分页插件](https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md)。
 
@@ -182,3 +274,9 @@ If you want to control the order in which the interceptor plug-in, you can use t
 //Or
 @AutoConfigureBefore(PageHelperAutoConfiguration.class)
 ```
+
+## 感谢所有项目贡献者！
+
+<a href="https://github.com/pagehelper/pagehelper-spring-boot/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=pagehelper/pagehelper-spring-boot" />
+</a>

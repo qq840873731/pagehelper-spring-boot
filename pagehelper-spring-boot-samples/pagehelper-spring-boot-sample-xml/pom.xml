@@ -28,17 +28,12 @@
     <parent>
         <groupId>com.github.pagehelper</groupId>
         <artifactId>pagehelper-spring-boot-samples</artifactId>
-        <version>1.4.1</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>pagehelper-spring-boot-sample-xml</artifactId>
     <packaging>jar</packaging>
     <name>pagehelper-spring-boot-sample-xml</name>
     <dependencies>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>

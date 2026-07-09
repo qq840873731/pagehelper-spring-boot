@@ -29,17 +29,17 @@
 
     <groupId>com.github.pagehelper</groupId>
     <artifactId>pagehelper-spring-boot</artifactId>
-    <version>1.4.1</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>pagehelper-spring-boot</name>
     <description>Spring Boot Support for PageHelper</description>
-    <url>https://github.com/pagehelper/pagehelper-boot-starter/</url>
+    <url>https://github.com/pagehelper/pagehelper-spring-boot/</url>
 
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
-            <url>https://github.com/pagehelper/pagehelper-boot-starter/blob/master/LICENSE</url>
+            <url>https://github.com/pagehelper/pagehelper-spring-boot/blob/master/LICENSE</url>
         </license>
     </licenses>
 
@@ -51,9 +51,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:pagehelper/pagehelper-boot-starter.git</connection>
-        <developerConnection>scm:git:git@github.com:pagehelper/pagehelper-boot-starter.git</developerConnection>
-        <url>git@github.com:pagehelper/pagehelper-boot-starter.git</url>
+        <connection>scm:git:git@github.com:pagehelper/pagehelper-spring-boot.git</connection>
+        <developerConnection>scm:git:git@github.com:pagehelper/pagehelper-spring-boot.git</developerConnection>
+        <url>git@github.com:pagehelper/pagehelper-spring-boot.git</url>
     </scm>
 
     <modules>
@@ -63,15 +63,16 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <revision>4.1.1</revision>
+
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <mybatis.version>3.5.7</mybatis.version>
-        <pagehelper.version>5.3.0</pagehelper.version>
-        <mybatis-spring-boot.version>2.2.0</mybatis-spring-boot.version>
-        <spring-boot.version>2.6.0</spring-boot.version>
+        <mybatis.version>3.5.19</mybatis.version>
+        <pagehelper.version>6.1.1</pagehelper.version>
+        <mybatis-spring-boot.version>4.0.1</mybatis-spring-boot.version>
+        <spring-boot.version>4.1.0</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -126,7 +127,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.2.0</version>
+                        <version>3.8.0</version>
                         <configuration>
                             <additionalOptions>
                                 <additionalOption>-Xdoclint:none</additionalOption>
@@ -143,7 +144,9 @@
                     </plugin>
                     <!-- GPG mvn clean deploy -P release -Dgpg.passphrase=YourPassphase-->
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.5</version>
                         <inherited>true</inherited>
                         <executions>
                             <execution>
@@ -154,17 +157,34 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <argument>--pinentry-mode</argument>
+                                <argument>loopback</argument>
+                            </gpgArguments>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.4.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <tokenAuth>true</tokenAuth>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                    <id>central</id>
+                    <url>https://central.sonatype.com/api/v1/publisher/upload</url>
                 </snapshotRepository>
                 <repository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <id>central</id>
+                    <url>https://central.sonatype.com/api/v1/publisher/upload</url>
                 </repository>
             </distributionManagement>
         </profile>
@@ -175,13 +195,38 @@
             <!-- Source -->
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>3.3.1</version>
                 <inherited>true</inherited>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -42,10 +42,11 @@ import java.util.List;
  *
  * @author liuzh
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnBean(SqlSessionFactory.class)
-@EnableConfigurationProperties(PageHelperProperties.class)
+@EnableConfigurationProperties({PageHelperProperties.class, PageHelperStandardProperties.class})
 @AutoConfigureAfter(MybatisAutoConfiguration.class)
+//@Import(PageHelperProperties.class)
 @Lazy(false)
 public class PageHelperAutoConfiguration implements InitializingBean {
 
@@ -53,9 +54,9 @@ public class PageHelperAutoConfiguration implements InitializingBean {
 
     private final PageHelperProperties properties;
 
-    public PageHelperAutoConfiguration(List<SqlSessionFactory> sqlSessionFactoryList, PageHelperProperties properties) {
+    public PageHelperAutoConfiguration(List<SqlSessionFactory> sqlSessionFactoryList, PageHelperStandardProperties standardProperties) {
         this.sqlSessionFactoryList = sqlSessionFactoryList;
-        this.properties = properties;
+        this.properties = standardProperties.getProperties();
     }
 
     @Override
@@ -80,7 +81,7 @@ public class PageHelperAutoConfiguration implements InitializingBean {
     private boolean containsInterceptor(org.apache.ibatis.session.Configuration configuration, Interceptor interceptor) {
         try {
             // getInterceptors since 3.2.2
-            return configuration.getInterceptors().contains(interceptor);
+            return configuration.getInterceptors().stream().anyMatch(config->interceptor.getClass().isAssignableFrom(config.getClass()));
         } catch (Exception e) {
             return false;
         }
